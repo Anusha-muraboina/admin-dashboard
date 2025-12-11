@@ -1,0 +1,440 @@
+ {% extends 'dashboard/base.html' %}
+{% block title %}Add User{% endblock %}
+
+{% block content %}
+ 
+
+
+  <div class="container mx-auto px-2 py-2  ">
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-2xl sm:text-3xl font-semibold text-gray-800">
+        Users <span class="text-gray-600 text-lg sm:text-2xl">» Manage users</span>
+      </h1>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <!-- Title and Add Button -->
+      <div class="px-4 sm:px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 class="text-lg font-medium text-gray-700">All users</h2>
+        {% comment %} <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full flex items-center gap-2 transition whitespace-nowrap">
+          <i class="fas fa-plus"></i> Add
+        </button> {% endcomment %}
+
+        <a href="{% url 'add_user' %}">
+  <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full flex items-center gap-2 transition whitespace-nowrap">
+    <i class="fas fa-plus"></i> Add
+  </button>
+</a>
+
+      </div>
+
+      <!-- Toolbar -->
+      <div class="px-4 sm:px-6 py-4 flex flex-col lg:flex-row items-start lg:items-center gap-4 text-sm flex-wrap">
+        <!-- Show entries -->
+        <div class="flex items-center gap-2 whitespace-nowrap">
+          <span class="text-gray-700">Show</span>
+          <select class="border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+            <option>25</option>
+            <option>50</option>
+            <option>100</option>
+          </select>
+          <span class="text-gray-700">entries</span>
+        </div>
+
+        <!-- Export buttons -->
+        <div class="flex flex-wrap gap-2">
+          <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-gray-700 text-xs">Export CSV</button>
+          <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-gray-700 text-xs">Export Excel</button>
+          <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-gray-700 text-xs">Print</button>
+          <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-gray-700 text-xs">Column visibility</button>
+          <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-gray-700 text-xs">Export PDF</button>
+        </div>
+
+        <!-- Search -->
+        <div class="w-full lg:w-auto lg:ml-auto">
+          <input type="text" placeholder="Search..." class="w-full lg:w-64 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+        </div>
+      </div>
+
+      <!-- Table (Horizontally scrollable on mobile) -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="px-4 sm:px-6 py-3 text-gray-600 font-medium cursor-pointer hover:bg-gray-100 whitespace-nowrap">
+                Username <span class="ml-1 text-xs">↑↓</span>
+              </th>
+              <th class="px-4 sm:px-6 py-3 text-gray-600 font-medium cursor-pointer hover:bg-gray-100 whitespace-nowrap">
+                Name <span class="ml-1 text-xs">↑↓</span>
+              </th>
+              <th class="px-4 sm:px-6 py-3 text-gray-600 font-medium cursor-pointer hover:bg-gray-100 whitespace-nowrap">
+                Role <span class="ml-1 text-xs">↑↓</span>
+              </th>
+              <th class="px-4 sm:px-6 py-3 text-gray-600 font-medium cursor-pointer hover:bg-gray-100 whitespace-nowrap">
+                Email <span class="ml-1 text-xs">↑↓</span>
+              </th>
+              <th class="px-4 sm:px-6 py-3 text-gray-600 font-medium cursor-pointer hover:bg-gray-100 whitespace-nowrap">
+                Action <span class="ml-1 text-xs">↑↓</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 sm:px-6 py-4">anushamuraboina9@gmail.com</td>
+              <td class="px-4 sm:px-6 py-4">anusha</td>
+              <td class="px-4 sm:px-6 py-4">Admin</td>
+              <td class="px-4 sm:px-6 py-4">anushamuraboina9@gmail.com</td>
+              <td class="px-4 sm:px-6 py-4">
+                <div class="flex flex-wrap gap-2">
+                  <button class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs">Edit</button>
+                  <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs">View</button>
+                  <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs">Delete</button>
+                </div>
+              </td>
+            </tr>
+            <tr class="hover:bg-gray-50 bg-gray-50">
+              <td class="px-4 sm:px-6 py-4">Prabhu</td>
+              <td class="px-4 sm:px-6 py-4">Prabhu Appa (Laxminarayan nivas)</td>
+              <td class="px-4 sm:px-6 py-4">Admin</td>
+              <td class="px-4 sm:px-6 py-4">Prabhuappa79@gmail.com</td>
+              <td class="px-4 sm:px-6 py-4">
+                <div class="flex flex-wrap gap-2">
+                  <button class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs">Edit</button>
+                  <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs">View</button>
+                  <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs">Delete</button>
+                </div>
+              </td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 sm:px-6 py-4">shrikant1</td>
+              <td class="px-4 sm:px-6 py-4">shrikant</td>
+              <td class="px-4 sm:px-6 py-4">Only View</td>
+              <td class="px-4 sm:px-6 py-4">info@vivaanfarmhouse.com</td>
+              <td class="px-4 sm:px-6 py-4">
+                <div class="flex flex-wrap gap-2">
+                  {% comment %} <button class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs">Edit</button> {% endcomment %}
+                                <a href="{% url 'update_user'  %}" 
+                class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs">
+                    Edit
+                </a>
+
+                  <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs">View</button>
+                  <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs">Delete</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer: Showing entries + Pagination -->
+      <div class="px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm text-gray-600 border-t border-gray-200 gap-4">
+        <div>Showing 1 to 3 of 3 entries</div>
+        <div class="flex items-center gap-2">
+          <button class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed" disabled>Previous</button>
+          <button class="px-4 py-2 bg-blue-600 text-white rounded font-medium">1</button>
+          <button class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed" disabled>Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Copyright Footer -->
+    <div class="text-center text-gray-500 text-xs mt-8">
+      LEKAIHOKA - V6.18 | Copyright © 2025 All rights reserved.
+    </div>
+  </div>
+
+
+
+
+
+
+
+ <!-- USER LIST SECTION -->
+                {% comment %} <section id="section-user-list">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="p-2 rounded-lg bg-stat-blue-light">
+                            <svg class="w-5 h-5 text-stat-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-semibold text-gray-800">User List</h1>
+                            <p class="text-sm text-gray-500">Manage all user accounts</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <!-- Search & Actions -->
+                        <div
+                            class="p-4 border-b border-gray-200 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                            <div class="relative w-full sm:w-80">
+                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                                <input type="text" placeholder="Search users..."
+                                    class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition">
+                            </div>
+                            <div class="flex gap-2">
+                                <button
+                                    class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Export</button>
+                                <button
+                                    class="px-3 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary-dark">Add
+                                    User</button>
+                            </div>
+                        </div>
+
+                        <!-- Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50 border-b border-gray-200">
+                                    <tr>
+                                        <th
+                                            class="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Name</th>
+                                        <th
+                                            class="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Email</th>
+                                        <th
+                                            class="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Role</th>
+                                        <th
+                                            class="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Department</th>
+                                        <th
+                                            class="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Status</th>
+                                        <th
+                                            class="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-4 py-3 text-sm font-medium text-gray-800">Raj Kumar</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">raj@example.com</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">Admin</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">Operations</td>
+                                        <td class="px-4 py-3"><span
+                                                class="px-2 py-1 text-xs font-medium rounded-full bg-stat-green-light text-stat-green">Active</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-right">
+                                            <button
+                                                class="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                    </path>
+                                                </svg></button>
+                                            <button
+                                                class="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg></button>
+                                            <button
+                                                class="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-4 py-3 text-sm font-medium text-gray-800">Priya Sharma</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">priya@example.com</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">Sales Executive</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">Sales</td>
+                                        <td class="px-4 py-3"><span
+                                                class="px-2 py-1 text-xs font-medium rounded-full bg-stat-green-light text-stat-green">Active</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-right">
+                                            <button
+                                                class="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                    </path>
+                                                </svg></button>
+                                            <button
+                                                class="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg></button>
+                                            <button
+                                                class="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-4 py-3 text-sm font-medium text-gray-800">Amit Patel</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">amit@example.com</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">Manager</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">Inventory</td>
+                                        <td class="px-4 py-3"><span
+                                                class="px-2 py-1 text-xs font-medium rounded-full bg-stat-green-light text-stat-green">Active</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-right">
+                                            <button
+                                                class="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                    </path>
+                                                </svg></button>
+                                            <button
+                                                class="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg></button>
+                                            <button
+                                                class="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-4 py-3 text-sm font-medium text-gray-800">Sneha Reddy</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">sneha@example.com</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">Accountant</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">Accounts</td>
+                                        <td class="px-4 py-3"><span
+                                                class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">Inactive</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-right">
+                                            <button
+                                                class="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                    </path>
+                                                </svg></button>
+                                            <button
+                                                class="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg></button>
+                                            <button
+                                                class="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-4 py-3 text-sm font-medium text-gray-800">Vikram Singh</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">vikram@example.com</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">Sales Executive</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">Sales</td>
+                                        <td class="px-4 py-3"><span
+                                                class="px-2 py-1 text-xs font-medium rounded-full bg-stat-green-light text-stat-green">Active</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-right">
+                                            <button
+                                                class="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                    </path>
+                                                </svg></button>
+                                            <button
+                                                class="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg></button>
+                                            <button
+                                                class="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded"><svg
+                                                    class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div
+                            class="p-4 border-t border-gray-200 flex items-center justify-between text-sm text-gray-500">
+                            <span>Showing 5 of 5 users</span>
+                            <div class="flex gap-2">
+                                <button class="px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50"
+                                    disabled>Previous</button>
+                                <button class="px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50"
+                                    disabled>Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </section> {% endcomment %}
+
+{% endblock %}
+
+
+
+
+

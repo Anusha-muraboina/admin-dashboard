@@ -1,0 +1,363 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Laxminarayan Pearls {% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+        <!-- Bootstrap 5 + Icons -->
+  {% comment %} <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/> {% endcomment %}
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            DEFAULT: '#1a4f9c',
+                            light: '#e8f0fe',
+                            dark: '#0d3a7a',
+                        },
+                        stat: {
+                            blue: '#1a4f9c',
+                            'blue-light': '#e8f0fe',
+                            yellow: '#f59e0b',
+                            'yellow-light': '#fef3c7',
+                            green: '#22c55e',
+                            'green-light': '#dcfce7',
+                            orange: '#f97316',
+                            'orange-light': '#ffedd5',
+                            purple: '#8b5cf6',
+                            'purple-light': '#f3e8ff',
+                            red: '#ef4444',
+                            'red-light': '#fee2e2',
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .nav-item {
+            transition: background 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .sidebar-shrink .nav-label {
+            display: none !important;
+        }
+
+        .sidebar-shrink .submenu {
+            display: none !important;
+        }
+
+        .sidebar-shrink .logo-text {
+            display: none !important;
+        }
+
+        .sidebar-shrink {
+            width: 4.5rem !important;
+        }
+
+        .sidebar-collapsed {
+            transform: translateX(-100%);
+        }
+
+        /* When collapsed: Hide EVERYTHING except the collapse button */
+        /* Full collapse on desktop */
+        .sidebar-collapsed {
+            transform: translateX(-100%);
+        }
+
+        /* Floating collapse button when sidebar is hidden */
+        #toggleCollapse.floating {
+            position: fixed;
+            left: 0;
+            top: 20px;
+            z-index: 50;
+            background: #1a4f9c;
+            border-radius: 0 12px 12px 0;
+            padding: 14px 10px;
+            box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        /* Mobile off-canvas (only on mobile) */
+        /* Show hamburger only when sidebar is collapsed on desktop */
+        @media (min-width: 768px) {
+            #mobileMenuBtn {
+                display: none;
+                /* hidden by default */
+            }
+
+            .sidebar-collapsed~#mainWrapper #mobileMenuBtn {
+                display: block !important;
+                /* show when collapsed */
+            }
+        }
+
+        /* Optional: make it look nice */
+        .sidebar-collapsed~#mainWrapper header {
+            padding-left: 1rem;
+        }
+
+
+        .arrow-rotated {
+            transform: rotate(90deg);
+        }
+
+        .transition-fast {
+            transition: all 220ms cubic-bezier(.2, .8, .2, 1);
+        }
+
+        .section-hidden {
+            display: none;
+        }
+
+        .section-visible {
+            display: block;
+        }
+
+        /* Animation for wave emoji */
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(20deg);
+            }
+
+            75% {
+                transform: rotate(-15deg);
+            }
+        }
+
+        .animate-wave {
+            display: inline-block;
+            animation: wave 1s ease-in-out infinite;
+        }
+</style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+<div class="flex min-h-screen">
+
+    {% include 'dashboard/sidenav.html' %}
+
+    <div  id="mainWrapper" class="flex-1 ml-60 flex flex-col min-h-screen">
+
+        {% include 'dashboard/header.html' %}
+
+        <main id="main-content" class="flex-1 p-6 overflow-auto">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        {% include 'dashboard/footer.html' %}
+    </div>
+</div>
+
+<script>
+document.getElementById("currentDate").textContent = 
+    new Date().toLocaleDateString("en-GB", {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+</script>
+
+    <script>
+        // Current Date
+        {% comment %} document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-GB', {
+            day: '2-digit', month: '2-digit', year: 'numeric'
+        }).replace(/\//g, '-'); {% endcomment %}
+
+        let isCollapsed = false;
+
+        const sidebar = document.getElementById('sidebar');
+        const mainWrapper = document.getElementById('mainWrapper');
+        const toggleCollapse = document.getElementById('toggleCollapse');
+        const collapseIcon = document.getElementById('collapseIcon');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileSidebar = document.getElementById('mobileSidebar');
+        const mobileBackdrop = document.getElementById('mobileBackdrop');
+
+        // Mobile Off-canvas
+        function openMobileSidebar() {
+            mobileSidebar.classList.remove('-translate-x-full');
+            mobileBackdrop.classList.remove('hidden');
+        }
+        function closeMobileSidebar() {
+            mobileSidebar.classList.add('-translate-x-full');
+            mobileBackdrop.classList.add('hidden');
+        }
+
+        // Desktop Collapse
+        function toggleDesktopCollapse() {
+            isCollapsed = !isCollapsed;
+
+            if (isCollapsed) {
+                sidebar.classList.add('sidebar-collapsed');
+                mainWrapper.style.marginLeft = '0';
+                collapseIcon.style.transform = 'rotate(180deg)';
+                toggleCollapse.classList.add('floating');
+                mobileMenuBtn.classList.remove('hidden');   // Show hamburger
+            } else {
+                sidebar.classList.remove('sidebar-collapsed');
+                mainWrapper.style.marginLeft = '15rem';
+                collapseIcon.style.transform = 'rotate(0deg)';
+                toggleCollapse.classList.remove('floating');
+                mobileMenuBtn.classList.add('hidden');       // Hide hamburger
+            }
+        }
+
+        // Collapse Button Click
+        toggleCollapse.addEventListener('click', () => {
+            if (window.innerWidth >= 768) {
+                toggleDesktopCollapse();
+            } else {
+                closeMobileSidebar(); // mobile: close off-canvas
+            }
+        });
+
+        // Hamburger Click
+        mobileMenuBtn.addEventListener('click', () => {
+            if (window.innerWidth >= 768) {
+                // Desktop collapsed → reopen sidebar
+                if (isCollapsed) {
+                    isCollapsed = false;
+                    sidebar.classList.remove('sidebar-collapsed');
+                    mainWrapper.style.marginLeft = '15rem';
+                    collapseIcon.style.transform = 'rotate(0deg)';
+                    toggleCollapse.classList.remove('floating');
+                    mobileMenuBtn.classList.add('hidden');
+                }
+            } else {
+                // Mobile → open off-canvas
+                openMobileSidebar();
+            }
+        });
+
+        // Backdrop click
+        mobileBackdrop.addEventListener('click', closeMobileSidebar);
+
+        // Responsive setup
+        function updateLayout() {
+            if (window.innerWidth < 768) {
+                mobileMenuBtn.classList.remove('hidden');
+                mainWrapper.style.marginLeft = '0';
+                sidebar.classList.add('hidden');
+                toggleCollapse.classList.add('hidden');
+            } else {
+                sidebar.classList.remove('hidden');
+                toggleCollapse.classList.remove('hidden');
+                mobileMenuBtn.classList.toggle('hidden', !isCollapsed);
+                mainWrapper.style.marginLeft = isCollapsed ? '0' : '15rem';
+            }
+        }
+
+        window.addEventListener('load', updateLayout);
+        window.addEventListener('resize', updateLayout);
+
+
+
+        // Submenu
+        function toggleSubmenu(id, btn) {
+            const submenu = document.getElementById(id);
+            const arrow = btn.querySelector('.arrow');
+            submenu.classList.toggle('hidden');
+            arrow?.classList.toggle('arrow-rotated');
+        }
+        function toggleMobileSubmenu(btn) {
+            const submenu = btn.nextElementSibling;
+            const arrow = btn.querySelector('.arrow-m');
+            submenu.classList.toggle('hidden');
+            arrow?.classList.toggle('rotated');
+        }
+    </script>
+<script>
+function loadPage(url) {
+  if (!url) return;
+
+  // Optional: Show loading state
+  document.getElementById('main-content').innerHTML = '<div class="p-10 text-center text-gray-500">Loading...</div>';
+
+  fetch(url)
+    .then(response => {
+      if (!response.ok) throw new Error('Page not found');
+      return response.text();
+    })
+    .then(html => {
+      document.getElementById('main-content').innerHTML = html;
+
+      // Optional: Update active menu item
+      document.querySelectorAll('.nav-item, a[data-page]').forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('data-page') === url || item.onclick?.toString().includes(url)) {
+          item.classList.add('active');
+        }
+      });
+
+      // Close mobile menu after loading
+      if (window.innerWidth < 768) closeMobileSidebar();
+    })
+    .catch(err => {
+      document.getElementById('main-content').innerHTML = 
+        `<div class="p-10 text-center text-red-500">Error loading page: ${err.message}</div>`;
+    });
+}
+
+// Attach click listeners to all menu links with data-page
+document.querySelectorAll('a[data-page]').forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    const pageUrl = this.getAttribute('data-page');
+    loadPage(pageUrl);
+
+    // Update active state
+    document.querySelectorAll('a[data-page]').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+{% comment %} {% extends "dashboard/base.html" %} {% endcomment %}
+{% block title %} Calendar {% endblock %}
+
+{% block content %}
+
+<div class="p-4">
+
+    <h1 class="text-2xl font-bold mb-6">Calendar</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+        <!-- LEFT SIDEBAR FILTERS -->
+        <div class="bg-white shadow rounded-xl p-5 h-fit">
+
+            <!-- User -->
+            <label class="font-semibold text-gray-700">User:</label>
+            <select class="w-full mt-1 mb-4 px-3 py-2 border rounded-lg">
+                <option selected>anusha</option>
+            </select>
+
+            <!-- Location -->
+            <label class="font-semibold text-gray-700">Location:</label>
+            <select class="w-full mt-1 mb-4 px-3 py-2 border rounded-lg">
+                <option selected>Please Select</option>
+            </select>
+
+            <!-- Checkboxes List -->
+            <div class="space-y-3 text-sm">
+
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" checked class="w-4 h-4">
+                    <span class="text-blue-600 font-semibold">Bookings</span>
+                </label>
+
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" checked class="w-4 h-4">
+                    <span class="text-yellow-600 font-semibold">Follow ups</span>
+                </label>
+
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" checked class="w-4 h-4">
+                    <span class="text-purple-600 font-semibold">To Do</span>
+                </label>
+
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" checked class="w-4 h-4">
+                    <span class="text-green-600 font-semibold">Holidays</span>
+                </label>
+
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" checked class="w-4 h-4">
+                    <span class="text-red-600 font-semibold">Leaves</span>
+                </label>
+
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" checked class="w-4 h-4">
+                    <span class="text-orange-600 font-semibold">Reminders</span>
+                </label>
+
+            </div>
+
+            <!-- Add To Do Button -->
+            <button class="mt-6 w-full bg-green-600 text-white font-semibold py-2 rounded-lg hover:bg-green-700">
+                + Add To Do
+            </button>
+
+        </div>
+
+        <!-- MAIN CALENDAR -->
+        <div class="md:col-span-3 bg-white shadow rounded-xl p-5">
+            <div id="calendar"></div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- FullCalendar Script -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const calendarEl = document.getElementById('calendar');
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+        },
+        height: 'auto',
+        selectable: true,
+        events: [
+            // Example event
+            {
+                title: 'Sample Event',
+                start: new Date().toISOString().split("T")[0]
+            }
+        ]
+    });
+
+    calendar.render();
+});
+</script>
+
+{% endblock %}

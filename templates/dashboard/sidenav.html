@@ -1,0 +1,161 @@
+   <aside id="sidebar"
+            class="w-60 bg-primary text-white min-h-screen flex flex-col fixed left-0 top-0 bottom-0 z-30 transition-fast">
+            <div class="p-4 flex items-center justify-between border-b border-white/10">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-white flex items-center justify-center flex-shrink-0">
+                        <span class="text-primary font-bold text-lg">L</span>
+                    </div>
+                    <span class="font-semibold logo-text text-sm">Laxminarayan Pearls</span>
+                </div>
+                <button id="toggleCollapse" class="p-2 rounded-lg hover:bg-white/10 transition-fast">
+                    <svg class="w-5 h-5 transition-transform" id="collapseIcon" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="flex-1 px-3 py-4 overflow-y-auto scrollbar-thin">
+                <ul class="space-y-2">
+                    <!-- Home -->
+                    <li>
+                        <a href="{% url 'home' %}" class="nav-item active flex items-center gap-4 px-4 py-3 rounded-lg text-sm"
+                            data-section="home" onclick="showSection('home', this)">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            <span class="nav-label">Home</span>
+                        </a>
+                    </li>
+
+                    <!-- User Management -->
+                    <li>
+                        <button class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-lg text-left"
+                            onclick="toggleSubmenu('userSub', this)">
+                            <div class="flex items-center gap-4">
+                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                                <span class="nav-label"  style="font-size: 15px;">User Management</span>
+                            </div>
+                            <svg class="w-4 h-4 arrow transition-transform flex-shrink-0" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    
+                                 <ul id="userSub" class="hidden ml-6 space-y-1">
+                    <!-- <li><a href="{% url 'add_user' %}" class="block px-4 py-2">Add User</a></li> -->
+                    <li><a href="{% url 'user_list' %}" class="block px-4 py-2">User List</a></li>
+                    <li><a href="{% url 'roles' %}" class="block px-4 py-2">Roles & Permissions</a></li>
+                </ul>
+                    </li>
+
+                    <!-- Products -->
+                    <li>
+                        <button class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-lg text-left"
+                            onclick="toggleSubmenu('productSub', this)">
+                            <div class="flex items-center gap-4">
+                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                </svg>
+                                <span class="nav-label">Products</span>
+                            </div>
+                            <svg class="w-4 h-4 arrow transition-transform flex-shrink-0" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                        <ul id="productSub" class="submenu ml-12 mt-2 space-y-1 hidden">
+                            <li><a href="#" class="block px-4 py-2.5 text-sm rounded-lg hover:bg-white/10"
+                                    onclick="showSection('add-product', this)">Add Product</a></li>
+                            <li><a href="#" class="block px-4 py-2.5 text-sm rounded-lg hover:bg-white/10"
+                                    onclick="showSection('product-list', this)">Product List</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Other Menu Items -->
+                    <li>
+                        <a href="#" class="nav-item flex items-center gap-4 px-4 py-3 rounded-lg text-sm"
+                            data-section="customers" onclick="showSection('customers', this)">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <span class="nav-label">Customers</span>
+                        </a>
+                    </li>
+                    <!-- Add more items as needed -->
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Mobile Off-Canvas Sidebar (Full Copy of Desktop Menu) -->
+        <!-- <div id="mobileSidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden" onclick="closeMobileSidebar()"></div> -->
+        <div id="mobileBackdrop" class="fixed inset-0 bg-black/60 z-40 hidden" onclick="closeMobileSidebar()">
+        </div>
+        <aside id="mobileSidebar"
+            class="fixed top-0 left-0 h-full w-72 bg-primary text-white z-50 transform -translate-x-full transition-fast overflow-y-auto">
+            <div class="p-4 flex items-center justify-between border-b border-white/10">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-white flex items-center justify-center">
+                        <span class="text-primary font-bold text-lg">L</span>
+                    </div>
+                    <span class="font-semibold">Laxminarayan Pearls</span>
+                </div>
+                <button onclick="closeMobileSidebar()" class="p-2 hover:bg-white/10 rounded-lg transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <nav class="p-4">
+                <!-- EXACT SAME MENU AS DESKTOP -->
+                <ul class="space-y-2">
+                    <li><a href="#" class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10"
+                            onclick="showSection('home'); closeMobileSidebar()">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            Home
+                        </a></li>
+                    <li>
+                        <button
+                            class="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-white/10 text-left"
+                            onclick="toggleMobileSubmenu(this)">
+                            <div class="flex items-center gap-4">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                                User Management
+                            </div>
+                            <svg class="w-4 h-4 arrow-m transition-transform" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                        <ul class="submenu-m ml-8 mt-2 space-y-1 hidden">
+                            <li><a href="#" class="block px-4 py-2.5 text-sm rounded-lg hover:bg-white/10"
+                                    onclick="showSection('add-user'); closeMobileSidebar()">Add User</a></li>
+                            <li><a href="#" class="block px-4 py-2.5 text-sm rounded-lg hover:bg-white/10"
+                                    onclick="showSection('user-list'); closeMobileSidebar()">User List</a></li>
+                            <li><a href="#" class="block px-4 py-2.5 text-sm rounded-lg hover:bg-white/10"
+                                    onclick="showSection('roles'); closeMobileSidebar()">Roles & Permissions</a></li>
+                        </ul>
+                    </li>
+                    <!-- Copy all other menu items here with same structure -->
+                </ul>
+            </nav>
+        </aside>

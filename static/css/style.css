@@ -1,0 +1,68 @@
+body {
+    background: #f5f7fa;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background: #ffffff;
+    height: 100vh;
+    border-right: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    padding-bottom: 30px;
+}
+
+.sidebar-header {
+    background: #0d6efd;
+}
+
+.sidebar .nav-link {
+    padding: 12px 18px;
+    color: #333;
+    font-weight: 500;
+    border-radius: 8px;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background: #e8f0ff;
+    color: #0d6efd;
+}
+
+/* Topnav */
+.topnav {
+    height: 70px;
+    background: #0049d0;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.user-box {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Dashboard Cards */
+.dash-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 18px;
+    text-align: left;
+}
+
+.dash-card h6 {
+    font-size: 15px;
+    color: #555;
+}
+
+.dash-card h3 {
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.icon-box {
+    font-size: 26px;
+    color: #0d6efd;
+    margin-bottom: 8px;
+}

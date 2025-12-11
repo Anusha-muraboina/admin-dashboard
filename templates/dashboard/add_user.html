@@ -1,0 +1,476 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Add User{% endblock %}
+  <style>
+    .required:after { content: " *"; color: red; }
+  </style>
+{% block content %}
+    <!-- paste your entire "Add User" section here -->
+ 
+    <div class="flex">
+  <style>
+    .required:after { content: " *"; color: red; }
+  </style>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-2">
+      <div class="bg-white rounded-lg shadow-lg  mx-auto">
+        <!-- Header -->
+        <header class=" text-black p-6 rounded-t-lg">
+          <h1 class="text-3xl font-bold">Add User</h1>
+        </header>
+
+        <form class="p-6 space-y-10">
+          <!-- Basic Information -->
+          <section>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Prefix:</label>
+                <select class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
+                  <option>Mr.</option>
+                  <option>Mrs.</option>
+                  <option>Miss</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium required">First Name:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2" placeholder="First Name" required>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Last Name:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Last Name">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 items-end">
+              <div>
+                <label class="block text-sm font-medium required">Email:</label>
+                <input type="email" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Email" required>
+              </div>
+              <div class="flex flex-wrap items-center gap-6">
+                <label class="flex items-center">
+                  <input type="checkbox" class="mr-2 h-5 w-5 text-blue-600" checked>
+                  <span>Is active?</span>
+                  <i class="fas fa-info-circle text-blue-500 ml-2"></i>
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" id="enable-staff-pin" class="mr-2 h-5 w-5 text-blue-600">
+                  <span>Enable service staff pin</span>
+                  <i class="fas fa-info-circle text-blue-500 ml-2"></i>
+                </label>
+              </div>
+            </div>
+
+            <!-- Staff PIN (Conditional) -->
+            <div id="staff-pin-section" class="mt-6 hidden">
+              <label class="block text-sm font-medium text-gray-700">Staff PIN:</label>
+              <input type="password" class="mt-1 block w-full max-w-xs border border-gray-300 rounded-md px-4 py-2" placeholder="Enter Staff PIN">
+            </div>
+          </section>
+
+          <!-- Roles and Permissions -->
+          <section class="border-t pt-8">
+            <h3 class="text-xl font-semibold mb-6">Roles and Permissions</h3>
+            <label class="flex items-center mb-6">
+              <input type="checkbox" id="allow-login" class="mr-3 h-5 w-5 text-blue-600" checked>
+              <span class="font-medium">Allow login</span>
+            </label>
+
+            <!-- Login Fields (Conditional) -->
+            <div id="login-fields" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Username:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2" value="anushamuraboina@gmail.com">
+                <p class="text-xs text-gray-500 mt-1">Leave blank to auto generate username</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium required">Password:</label>
+                <input type="password" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium required">Confirm Password:</label>
+                <input type="password" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div class="md:col-span-3">
+                <label class="block text-sm font-medium text-gray-700">Role <i class="fas fa-info-circle text-blue-500 ml-1"></i></label>
+                <select class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+                  <option>Admin</option>
+                  <option>Cashier</option>
+                  <option>Only View</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Access Locations -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-3">Access locations <i class="fas fa-info-circle text-blue-500 ml-1"></i></label>
+              <label class="flex items-center mb-2">
+                <input type="checkbox" class="mr-3 h-5 w-5 text-blue-600" checked>
+                <span>All Locations</span>
+                <i class="fas fa-info-circle text-blue-500 ml-2"></i>
+              </label>
+              <div class="ml-8">
+                <label class="flex items-center text-gray-500">
+                  <input type="checkbox" class="mr-3" disabled>
+                  <span>Farmhouse Hyderabad (BL0001)</span>
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sales -->
+          <section class="border-t pt-8">
+            <h3 class="text-xl font-semibold mb-6">Sales</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Sales Commission Percentage (%) <i class="fas fa-info-circle text-blue-500 ml-1"></i></label>
+                <input type="number" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Sales Commission Percentage (%)">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Max sales discount percent <i class="fas fa-info-circle text-blue-500 ml-1"></i></label>
+                <input type="number" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Max sales discount percent">
+              </div>
+            </div>
+            <div class="mt-6">
+              <label class="flex items-center">
+                <input type="checkbox" class="mr-3 h-5 w-5 text-blue-600">
+                <span>Allow Selected Contacts <i class="fas fa-info-circle text-blue-500 ml-2"></i></span>
+              </label>
+            </div>
+          </section>
+
+          <!-- More Information -->
+          <section class="border-t pt-8">
+            <h3 class="text-xl font-semibold mb-6">More Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Date of birth:</label>
+                <input type="date" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Gender:</label>
+                <select class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+                  <option>Please Select</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Marital Status:</label>
+                <select class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+                  <option>Please Select</option>
+                  <option>Single</option>
+                  <option>Married</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Blood Group:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Blood Group">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Mobile Number:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Alternate contact number:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Family contact number:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Facebook Link:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Twitter Link:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Social Media 1:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Social Media 2:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Custom field 1:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Custom field 2:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Custom field 3:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Custom field 4:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Guardian Name:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">ID proof name:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">ID proof number:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700">Permanent Address:</label>
+                <textarea class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2" rows="3"></textarea>
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700">Current Address:</label>
+                <textarea class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2" rows="3"></textarea>
+              </div>
+            </div>
+          </section>
+
+          <!-- Bank Details -->
+          <section class="border-t pt-8">
+            <h3 class="text-xl font-semibold mb-6">Bank Details</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Account Holder's Name:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Account Number:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Bank Name:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Bank Identifier Code <i class="fas fa-info-circle text-blue-500 ml-1"></i></label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Branch:</label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Tax Payer ID <i class="fas fa-info-circle text-blue-500 ml-1"></i></label>
+                <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+              </div>
+            </div>
+          </section>
+
+          <!-- HRM Details -->
+          <section class="border-t pt-8">
+            <h3 class="text-xl font-semibold mb-6">HRM Details</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Department:</label>
+                <select class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+                  <option>Please Select</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Designation:</label>
+                <select class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+                  <option>Please Select</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <!-- Payroll -->
+          <section class="border-t pt-8 pb-10">
+            <h3 class="text-xl font-semibold mb-6">Payroll</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Primary work location:</label>
+                <select class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+                  <option>Please Select</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Basic salary:</label>
+                <input type="number" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2" placeholder="Basic salary">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Pay Components:</label>
+                <select class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2">
+                  <option>Per Month</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <!-- Submit Buttons -->
+          <div class="border-t pt-8 flex justify-end space-x-4">
+            <button type="button" class="px-8 py-3 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium">Cancel</button>
+            <button type="submit" class="px-8 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium">Save</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Enable service staff pin → show PIN field
+    document.getElementById('enable-staff-pin').addEventListener('change', function() {
+      document.getElementById('staff-pin-section').classList.toggle('hidden', !this.checked);
+    });
+
+    // Allow login → show/hide login fields
+    document.getElementById('allow-login').addEventListener('change', function() {
+      document.getElementById('login-fields').classList.toggle('hidden', !this.checked);
+    });
+  </script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} 
+{% extends 'dashboard/base.html' %}
+{% block title %}Add User{% endblock %}
+
+{% block content %}
+    <!-- paste your entire "Add User" section here -->
+     
+                <!-- ADD USER SECTION -->
+                <section id="section-add-user" class="section-hidden">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="p-2 rounded-lg bg-stat-blue-light">
+                            <svg class="w-5 h-5 text-stat-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-semibold text-gray-800">Add New User</h1>
+                            <p class="text-sm text-gray-500">Create a new user account</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                        <form id="addUserForm">
+                            <!-- Personal Information -->
+                            <div class="mb-6">
+                                <h2 class="text-lg font-medium text-gray-800 mb-4">Personal Information</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
+                                        <input type="text" placeholder="Enter first name" required
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
+                                        <input type="text" placeholder="Enter last name" required
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Email Address
+                                            *</label>
+                                        <input type="email" placeholder="Enter email address" required
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                                        <input type="tel" placeholder="Enter phone number"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Role & Department -->
+                            <div class="mb-6">
+                                <h2 class="text-lg font-medium text-gray-800 mb-4">Role & Department</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Role *</label>
+                                        <select required
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition">
+                                            <option value="">Select role</option>
+                                            <option value="admin">Admin</option>
+                                            <option value="manager">Manager</option>
+                                            <option value="sales">Sales Executive</option>
+                                            <option value="inventory">Inventory Manager</option>
+                                            <option value="accountant">Accountant</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Department *</label>
+                                        <select required
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition">
+                                            <option value="">Select department</option>
+                                            <option value="sales">Sales</option>
+                                            <option value="inventory">Inventory</option>
+                                            <option value="accounts">Accounts</option>
+                                            <option value="hr">Human Resources</option>
+                                            <option value="operations">Operations</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Security -->
+                            <div class="mb-6">
+                                <h2 class="text-lg font-medium text-gray-800 mb-4">Security</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Password *</label>
+                                        <input type="password" placeholder="Enter password" required
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password
+                                            *</label>
+                                        <input type="password" placeholder="Confirm password" required
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+                                <button type="reset"
+                                    class="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                    Reset
+                                </button>
+                                <button type="submit"
+                                    class="px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary-dark flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    Create User
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+{% endblock %} {% endcomment %}

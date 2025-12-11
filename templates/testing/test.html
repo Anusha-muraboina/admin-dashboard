@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laxminarayan Pearls - Dashboard</title>
+    <meta name="description" content="Farmhouse management dashboard for sales, inventory, and business operations" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              primary: {
+                DEFAULT: '#1a4f9c',
+                light: '#e8f0fe',
+                dark: '#0d3a7a',
+              },
+              stat: {
+                blue: '#1a4f9c',
+                'blue-light': '#e8f0fe',
+                yellow: '#f59e0b',
+                'yellow-light': '#fef3c7',
+                green: '#22c55e',
+                'green-light': '#dcfce7',
+                orange: '#f97316',
+                'orange-light': '#ffedd5',
+                purple: '#8b5cf6',
+                'purple-light': '#f3e8ff',
+                red: '#ef4444',
+                'red-light': '#fee2e2',
+              },
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      body { font-family: 'Inter', sans-serif; }
+      .scrollbar-thin::-webkit-scrollbar { width: 6px; }
+      .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+      .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 3px; }
+      .nav-item:hover { background: rgba(255,255,255,0.06); }
+      .nav-item.active { background: rgba(255,255,255,0.12); }
+      /* shrink specifics */
+      .sidebar-shrink .nav-label { display: none; }
+      .sidebar-shrink .submenu { display: none; } /* hide nested submenus in shrink mode */
+      .sidebar-shrink .logo-text { display: none; }
+      .sidebar-shrink .w-60 { width: 4.5rem !important; } /* Tailwind override to roughly w-18 */
+      /* collapsed: hide sidebar completely */
+      .sidebar-collapsed { transform: translateX(-120%); }
+      /* arrow rotation */
+      .arrow-rotated { transform: rotate(90deg); }
+      /* mobile offcanvas overlay */
+      .offcanvas-backdrop { background: rgba(0,0,0,0.4); }
+      .transition-fast { transition: all 220ms cubic-bezier(.2,.8,.2,1); }
+
+      /* POS specific */
+      .pos-card {
+        min-height: 220px;
+      }
+      .btn-purple {
+        background: linear-gradient(180deg, #5b12ff 0%, #4200d9 100%);
+        box-shadow: 0 6px 18px rgba(91,18,255,0.18);
+      }
+      /* responsive small adjustments */
+      @media (max-width: 640px) {
+        #main { margin-left: 0 !important; }
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-100 min-h-screen">
+    <div id="app" class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside id="sidebar" class="w-60 bg-primary text-white min-h-screen flex flex-col fixed left-0 top-0 bottom-0 z-30 transition-fast"
+             aria-label="Main sidebar">
+        <!-- Top (logo + controls) -->
+        <div class="p-4 flex items-center gap-2 justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center">
+              <span class="text-primary font-bold text-sm">L</span>
+            </div>
+            <span class="font-semibold text-sm logo-text">Laxminarayan pearls</span>
+          </div>
+
+          <!-- Desktop Toggle Buttons -->
+          <div class="hidden md:flex items-center gap-1">
+            <!-- Shrink/Expand toggle -->
+            <button id="toggleShrink" title="Shrink / Expand sidebar"
+              class="p-1 rounded-md bg-white/10 hover:bg-white/20 transition-fast" aria-pressed="false">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8M4 18h16"></path></svg>
+            </button>
+
+            <!-- Full collapse toggle -->
+            <button id="toggleCollapse" title="Collapse sidebar" class="p-1 rounded-md bg-white/10 hover:bg-white/20 transition-fast" aria-pressed="false">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6h12v12"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-2 py-2 overflow-y-auto scrollbar-thin" id="sidebarNav">
+          <ul class="space-y-1">
+            <li>
+              <a href="#" class="nav-item active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                <span class="nav-label">Home</span>
+              </a>
+            </li>
+
+            <!-- User Management (with submenu) -->
+            <li>
+              <button class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm text-white/90 hover:text-white"
+                data-toggle="submenu" data-target="userSub">
+                <div class="flex items-center gap-3">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1z"></path>
+                  </svg>
+                  <span class="nav-label label">User Management</span>
+                </div>
+
+                <svg class="w-4 h-4 transition-transform arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+
+              <!-- submenu -->
+              <ul id="userSub" class="submenu ml-10 mt-2 space-y-1 hidden">
+                <li>
+                  <a href="#" class="block px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/6 rounded-lg">
+                    Add User
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="block px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/6 rounded-lg">
+                    User List
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="block px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/6 rounded-lg">
+                    Roles & Permissions
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <!-- Simple menu items -->
+            <li>
+              <a href="#" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/80 hover:text-white">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <span class="nav-label">Contacts</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/80 hover:text-white">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                <span class="nav-label">Products</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/80 hover:text-white">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <span class="nav-label">Purchases</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Mobile off-canvas (hidden on md+) -->
+      <div id="mobileSidebarBackdrop" class="fixed inset-0 z-40 hidden md:hidden offcanvas-backdrop" aria-hidden="true"></div>
+      <aside id="mobileSidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-primary text-white transform -translate-x-full md:hidden transition-fast" aria-label="Mobile sidebar">
+        <div class="p-4 flex items-center gap-2 justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center">
+              <span class="text-primary font-bold text-sm">L</span>
+            </div>
+            <span class="font-semibold text-sm">Laxminarayan pearls</span>
+          </div>
+          <button id="mobileClose" class="p-1 rounded-md bg-white/10 hover:bg-white/20">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+
+        <nav class="px-2 py-2 overflow-y-auto scrollbar-thin">
+          <ul class="space-y-1">
+            <li>
+              <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/90">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                Home
+              </a>
+            </li>
+            <!-- repeat basic items for mobile -->
+            <li>
+              <button class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm text-white/90" data-toggle="submenu" data-target="mobileUserSub">
+                <div class="flex items-center gap-3">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1z"></path>
+                  </svg>
+                  User Management
+                </div>
+                <svg class="w-4 h-4 transition-transform arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+              <ul id="mobileUserSub" class="ml-8 mt-2 space-y-1 hidden">
+                <li><a href="#" class="block px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/6 rounded-lg">Add User</a></li>
+                <li><a href="#" class="block px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/6 rounded-lg">User List</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <div id="main" class="flex-1 ml-60 md:ml-60 transition-fast min-h-screen">
+        <!-- Header -->
+        <header class="h-14 bg-primary flex items-center justify-between px-4 sticky top-0 z-20">
+          <div class="flex items-center gap-2">
+            <!-- Mobile menu button -->
+            <button id="mobileMenuBtn" class="md:hidden p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg" aria-expanded="false" aria-controls="mobileSidebar">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <!-- small util buttons -->
+            <button id="downloadBtn" class="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            </button>
+
+            <!-- POS button: when clicked, shows POS page in main area -->
+            <button id="posBtn" class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 6h10v12H7zM11 16v.01M15 16v.01"></path></svg>
+              POS
+            </button>
+
+            <div class="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-lg text-white text-sm">
+              <div class="w-8 h-8 rounded-full bg-stat-green flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+              </div>
+              <span class="text-sm">anusha</span>
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </div>
+          </div>
+        </header>
+
+        <!-- Main Content Area (placeholder) -->
+        <main id="mainContent" class="flex-1 p-6 overflow-auto">
+          <!-- DASHBOARD MARKUP - store this markup so we can restore it later -->
+          <div id="dashboardContent">
+            <div class="flex items-center justify-between gap-4 mb-6">
+              <h1 class="text-2xl font-semibold text-gray-800">Welcome anusha, <span class="inline-block animate-bounce">👋</span></h1>
+              <div class="flex items-center gap-2">
+                <button class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Filter by date</button>
+              </div>
+            </div>
+
+            <!-- simple cards to show layout -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div class="rounded-xl p-4 bg-stat-blue-light">
+                <div class="text-sm text-gray-500">Total Sales</div>
+                <div class="text-xl font-semibold text-stat-blue">₹ 0.00</div>
+              </div>
+              <div class="rounded-xl p-4 bg-stat-yellow-light">
+                <div class="text-sm text-gray-500">Net</div>
+                <div class="text-xl font-semibold text-stat-yellow">₹ 0.00</div>
+              </div>
+              <div class="rounded-xl p-4 bg-stat-blue-light">
+                <div class="text-sm text-gray-500">Invoice due</div>
+                <div class="text-xl font-semibold text-stat-blue">₹ 0.00</div>
+              </div>
+              <div class="rounded-xl p-4 bg-stat-orange-light">
+                <div class="text-sm text-gray-500">Total Sell Return</div>
+                <div class="text-xl font-semibold text-stat-orange">₹ 0.00</div>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <div class="bg-white rounded-xl p-4 shadow-sm">Put your dashboard content here.</div>
+            </div>
+          </div>
+
+          <!-- POS Content (hidden by default) -->
+          <div id="posContent" class="hidden">
+            <h1 class="text-3xl font-bold text-gray-900 mb-6">Open Cash Register</h1>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 pos-card">
+              <div class="max-w-4xl mx-auto">
+                <form id="openRegisterForm" class="space-y-6">
+                  <div class="grid grid-cols-12 items-center gap-4">
+                    <label for="cashInHand" class="col-span-12 sm:col-span-3 text-sm font-medium text-gray-700">Cash in hand:*</label>
+                    <div class="col-span-12 sm:col-span-9">
+                      <input id="cashInHand" name="cashInHand" type="number" min="0" step="0.01" placeholder="Enter amount"
+                        class="w-full border border-gray-200 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary" required />
+                    </div>
+                  </div>
+
+                  <div class="flex justify-end items-center gap-4">
+                    <button type="button" id="backBtn" class="px-4 py-2 rounded-md border border-gray-200 text-sm text-gray-700 hover:bg-gray-50">
+                      Back to Dashboard
+                    </button>
+                    <button type="submit" class="px-5 py-3 rounded-lg text-white btn-purple text-sm">
+                      Open Register
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- optional small info row -->
+            <div class="mt-4 text-sm text-gray-500">
+              Note: Register opened time will be recorded when you click <strong>Open Register</strong>.
+            </div>
+          </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="py-3 px-6 text-center text-sm text-gray-500 border-t border-gray-200 bg-white">
+          LEKAHOKA - Vn.18 | Copyright © 2025 All rights reserved.
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        // elements for sidebar behavior (kept from previous)
+        const sidebar = document.getElementById('sidebar');
+        const main = document.getElementById('main');
+        const toggleShrink = document.getElementById('toggleShrink');
+        const toggleCollapse = document.getElementById('toggleCollapse');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileSidebar = document.getElementById('mobileSidebar');
+        const mobileBackdrop = document.getElementById('mobileSidebarBackdrop');
+        const mobileClose = document.getElementById('mobileClose');
+
+        // Mode state: 'expanded' | 'shrink' | 'collapsed'
+        let mode = localStorage.getItem('sidebarMode') || 'expanded';
+        function applyMode() {
+          document.body.classList.remove('sidebar-shrink', 'sidebar-collapsed');
+          sidebar.classList.remove('sidebar-shrink', 'sidebar-collapsed');
+          main.classList.remove('ml-20', 'ml-0', 'ml-60');
+
+          if (mode === 'expanded') {
+            sidebar.style.transform = '';
+            sidebar.classList.remove('sidebar-shrink', 'sidebar-collapsed');
+            main.style.marginLeft = '15rem';
+            toggleShrink.setAttribute('aria-pressed', 'false');
+            toggleCollapse.setAttribute('aria-pressed', 'false');
+          } else if (mode === 'shrink') {
+            sidebar.classList.add('sidebar-shrink');
+            sidebar.style.transform = '';
+            main.style.marginLeft = '4.5rem';
+            toggleShrink.setAttribute('aria-pressed', 'true');
+            toggleCollapse.setAttribute('aria-pressed', 'false');
+          } else if (mode === 'collapsed') {
+            sidebar.classList.add('sidebar-collapsed');
+            main.style.marginLeft = '0';
+            toggleShrink.setAttribute('aria-pressed', 'false');
+            toggleCollapse.setAttribute('aria-pressed', 'true');
+          }
+          localStorage.setItem('sidebarMode', mode);
+        }
+        applyMode();
+
+        // toggles
+        toggleShrink.addEventListener('click', () => {
+          mode = (mode === 'expanded') ? 'shrink' : 'expanded';
+          applyMode();
+        });
+        toggleCollapse.addEventListener('click', () => {
+          mode = (mode === 'collapsed') ? 'expanded' : 'collapsed';
+          applyMode();
+        });
+
+        // submenu toggles
+        document.querySelectorAll('[data-toggle="submenu"]').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const targetId = btn.getAttribute('data-target');
+            if (!targetId) return;
+            const sub = document.getElementById(targetId);
+            if (!sub) return;
+            const arrow = btn.querySelector('.arrow');
+            if (sidebar.classList.contains('sidebar-shrink') && btn.closest('#sidebar')) {
+              // keep simple: do nothing in shrink mode
+            } else {
+              sub.classList.toggle('hidden');
+              if (arrow) arrow.classList.toggle('arrow-rotated');
+            }
+          });
+        });
+
+        // mobile off-canvas
+        mobileMenuBtn.addEventListener('click', () => {
+          mobileSidebar.classList.remove('-translate-x-full');
+          mobileBackdrop.classList.remove('hidden');
+          mobileBackdrop.classList.add('block');
+          setTimeout(() => { mobileSidebar.style.transform = 'translateX(0)'; }, 10);
+          mobileMenuBtn.setAttribute('aria-expanded', 'true');
+        });
+        function closeMobile() {
+          mobileSidebar.style.transform = '';
+          mobileSidebar.classList.add('-translate-x-full');
+          mobileBackdrop.classList.add('hidden');
+          mobileBackdrop.classList.remove('block');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        }
+        mobileClose.addEventListener('click', closeMobile);
+        mobileBackdrop.addEventListener('click', closeMobile);
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !mobileBackdrop.classList.contains('hidden')) closeMobile(); });
+
+        // ---------- POS logic: swap dashboard <-> pos view ----------
+        const posBtn = document.getElementById('posBtn');
+        const dashboardContent = document.getElementById('dashboardContent');
+        const posContent = document.getElementById('posContent');
+        const mainContent = document.getElementById('mainContent');
+        const backBtn = document.getElementById('backBtn');
+        const openRegisterForm = document.getElementById('openRegisterForm');
+
+        function showPosView() {
+          // hide dashboard, show pos
+          dashboardContent.classList.add('hidden');
+          posContent.classList.remove('hidden');
+          // scroll to top for nice UX
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showDashboard() {
+          posContent.classList.add('hidden');
+          dashboardContent.classList.remove('hidden');
+        }
+
+        posBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          showPosView();
+        });
+
+        backBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          showDashboard();
+        });
+
+        openRegisterForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const val = document.getElementById('cashInHand').value;
+          if (!val || Number(val) < 0) {
+            alert('Please enter a valid cash amount (0 or more).');
+            return;
+          }
+          // Here you would call backend to create register record.
+          // For now show a success toast and return to dashboard.
+          const toast = document.createElement('div');
+          toast.textContent = `Register opened with ₹ ${Number(val).toFixed(2)}`;
+          toast.className = 'fixed right-6 bottom-6 bg-white text-gray-800 px-4 py-2 rounded-lg shadow-lg';
+          document.body.appendChild(toast);
+          setTimeout(() => toast.remove(), 3000);
+
+          // simple UI state change: return to dashboard
+          setTimeout(showDashboard, 800);
+          openRegisterForm.reset();
+        });
+
+        // restore if user reloads (keep dashboard visible by default)
+        showDashboard();
+      })();
+    </script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
