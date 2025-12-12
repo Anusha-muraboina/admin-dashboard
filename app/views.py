@@ -20,6 +20,9 @@ def user_list(request):
 def roles(request):
     return render(request, 'dashboard/roles.html')
 
+def roles_add(request):
+    return render(request, 'dashboard/roles_add.html')
+
 def customers(request):
     return render(request, 'dashboard/customers.html')
 
@@ -37,3 +40,12 @@ def calender(request):
 
 def updateuser(request):
     return render(request, 'dashboard/update_user.html')
+
+def salescomission(request):
+    return render(request, 'dashboard/sales_commistion.html')
+
+def suppliers(request):
+    return render(request, 'dashboard/contact/suppliers.html')
+
+def suppliers_add(request):
+    return render(request, 'dashboard/contact/suppliers_add.html')

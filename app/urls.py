@@ -23,5 +23,11 @@ urlpatterns = [
     path('pos/', views.pos_page, name='pos'),
     path('calender/', views.calender, name='calender'),
     path('update_user/', views.updateuser ,name='update_user'),
-
+    
+    path('sales_commistion/', views.salescomission ,name='sales_commistion'),
+    path('suppliers/', views.suppliers, name='suppliers'),
+    path('suppliers/add/', views.suppliers_add, name='suppliers_add'),
+    path('roles/add/', views.roles_add, name='roles_add'),
+    
+    
 ]

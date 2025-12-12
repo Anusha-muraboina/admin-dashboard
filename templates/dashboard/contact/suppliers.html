@@ -1,0 +1,900 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Suppliers{% endblock %}
+
+{% block content %}
+<style>
+/* MAIN WRAPPER */
+.custom-scrollbar {
+    scrollbar-width: thin;           /* Firefox */
+    scrollbar-color: #94a3b8 #e2e8f0; /* Firefox thumb & track */
+}
+
+/* Chrome, Edge, Safari */
+.custom-scrollbar::-webkit-scrollbar {
+    height: 8px;   /* Horizontal scrollbar height */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #e2e8f0; /* gray-200 */
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #94a3b8; /* gray-400 */
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #64748b; /* gray-500 */
+}
+</style>
+
+<div class="bg-gray-50 min-h-screen py-2">
+  <div class="lg:max-w-7xl  mx-auto sm:max-w-2xl ">
+
+    <!-- Page header -->
+    <div class="mb-6">
+      <h1 class="text-3xl font-extrabold text-gray-900">
+        Suppliers
+        <span class="text-gray-500 font-medium text-base">Manage your Suppliers</span>
+      </h1>
+    </div>
+
+    <!-- FILTERS CARD (collapsible) -->
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm mb-6 overflow-hidden">
+      <button id="filtersToggleBtn" class="w-full px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 13v6a1 1 0 01-1.447.894L9 17l-4.26 3.894A1 1 0 013 20V4z"/>
+          </svg>
+          <div>
+            <p class="text-lg font-medium text-gray-700">Filters</p>
+            <p class="text-sm text-gray-500">Refine supplier list</p>
+          </div>
+        </div>
+        <svg id="filtersChevron" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+
+      <div id="filtersBody" class="px-6 pb-6 hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Left column: checkboxes -->
+          <div class="grid grid-cols-2 gap-6 pt-2">
+            <label class="flex items-start gap-3">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded">
+              <div><p class="font-medium text-gray-700">Purchase Due</p></div>
+            </label>
+
+            <label class="flex items-start gap-3">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded">
+              <div><p class="font-medium text-gray-700">Purchase Return</p></div>
+            </label>
+
+            <label class="flex items-start gap-3">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded">
+              <div><p class="font-medium text-gray-700">Advance Balance</p></div>
+            </label>
+
+            <label class="flex items-start gap-3">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded">
+              <div><p class="font-medium text-gray-700">Opening Balance</p></div>
+            </label>
+          </div>
+
+          <!-- Right column: selects -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div>
+              <label class="text-sm font-medium text-gray-600">Assigned to:</label>
+              <select class="w-full mt-2 border border-gray-300 rounded px-3 py-2 text-sm bg-white">
+                <option>None</option>
+                <option>Admin</option>
+                <option>Sales</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="text-sm font-medium text-gray-600">Status:</label>
+              <select class="w-full mt-2 border border-gray-300 rounded px-3 py-2 text-sm bg-white">
+                <option>None</option>
+                <option>Active</option>
+                <option>Inactive</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLE CARD -->
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+      <!-- Header row -->
+      {% comment %} <div class="px-6 py-4 border-b flex flex-col md:flex-row items-start md:items-center  gap-3">
+       <div>
+          <h2 class="text-lg font-semibold text-gray-800">All your Suppliers</h2>
+          <p class="text-sm text-gray-500 mt-1">Manage and view supplier contacts and balances</p>
+        </div> 
+
+        <div class="flex items-center gap-3 ">
+          <div class="flex items-center gap-2 text-sm">
+            <span>Show</span>
+            <select class="border border-gray-300 px-2 py-1 rounded text-sm">
+              <option>25</option><option>50</option><option>100</option>
+            </select>
+            <span>entries</span>
+          </div>
+
+          <div class="hidden sm:flex gap-2">
+            <button class="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50">Export CSV</button>
+            <button class="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50">Export Excel</button>
+            <button class="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50">Print</button>
+            <button class="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50">Column visibility</button>
+            <button class="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50">Export PDF</button>
+          </div>
+
+          <div>
+            <input type="text" placeholder="Search ..." class="border border-gray-300 px-3 py-2 rounded text-sm w-48">
+          </div>
+
+          <button id="openAddSupplier" class="ml-3 inline-flex items-center gap-2 bg-gradient-to-tr from-indigo-600 to-blue-500 text-white px-4 py-2 rounded-full shadow">
+            <span class="text-xl font-extrabold leading-none">+</span> Add
+          </button>
+        </div>
+      </div> {% endcomment %}
+<div class="px-6 py-4 border-b flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
+
+
+  <!-- RIGHT SIDE: Controls -->
+  <div class="w-full flex flex-col gap-4 md:flex-row md:items-center md:gap-3">
+
+    <!-- Show Entries -->
+    <div class="flex items-center gap-2 text-sm">
+      <span>Show</span>
+      <select class="border border-gray-300 px-2 py-1 rounded text-sm">
+        <option>25</option><option>50</option><option>100</option>
+      </select>
+      <span>entries</span>
+    </div>
+
+    <!-- Export buttons (hidden on mobile) -->
+    <div class="hidden sm:flex flex-wrap md:gap-4 gap-2">
+      <button class="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50">CSV</button>
+      <button class="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50">Excel</button>
+      <button class="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50">Print</button>
+      <button class="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50">Columns</button>
+      <button class="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50">PDF</button>
+    </div>
+
+    <!-- Search -->
+    <div class="w-full md:w-auto ">
+      <input type="text" placeholder="Search ..." 
+             class="border border-gray-300 px-3 py-2 rounded text-sm w-full md:w-80">
+    </div>
+
+    <!-- Add Button -->
+    <a href="{% url 'suppliers_add' %}" 
+       class="inline-flex justify-center items-center gap-2 bg-gradient-to-tr from-indigo-600 to-blue-500 
+              text-white px-4 py-2 rounded-full shadow w-full md:w-auto">
+      <span class="text-xl font-extrabold leading-none">+</span> Add
+    </a>
+
+  </div>
+</div>
+
+      <!-- table -->
+      {% comment %} <div class="overflow-x-auto"> {% endcomment %}
+
+      <div class="table-scroll overflow-x-auto overflow-y-hidden custom-scrollbar"
+     style="max-width: 100%; -webkit-overflow-scrolling: touch; white-space: nowrap;">
+        <table class="w-full min-w-[1400px] text-xs text-left">
+          <thead class="bg-gray-50 border-b">
+            <tr>
+              <th class="px-4 py-3">Action</th>
+              <th class="px-4 py-3">Contact ID <span class="sort-indicator" data-col="contact_id">↑↓</span></th>
+              <th class="px-4 py-3">Business Name <span class="sort-indicator" data-col="business_name">↑↓</span></th>
+              <th class="px-4 py-3">Name <span class="sort-indicator" data-col="name">↑↓</span></th>
+              <th class="px-4 py-3">Email <span class="sort-indicator" data-col="email">↑↓</span></th>
+              <th class="px-4 py-3">Tax number <span class="sort-indicator" data-col="tax">↑↓</span></th>
+              <th class="px-4 py-3">Pay term <span class="sort-indicator" data-col="pay_term">↑↓</span></th>
+              <th class="px-4 py-3">Opening Balance <span class="sort-indicator" data-col="opening_balance">↑↓</span></th>
+              <th class="px-4 py-3">Advance Balance <span class="sort-indicator" data-col="advance_balance">↑↓</span></th>
+              <th class="px-4 py-3">Added On <span class="sort-indicator" data-col="added_on">↑↓</span></th>
+              <th class="px-4 py-3">Address <span class="sort-indicator" data-col="address">↑↓</span></th>
+              <th class="px-4 py-3">Mobile <span class="sort-indicator" data-col="mobile">↑↓</span></th>
+
+              <!-- custom fields 1..10 -->
+              <th class="px-4 py-3">Custom Field 1 <button class="ml-2 text-xxs sort-btn" data-col="cf1">↑↓</button></th>
+              <th class="px-4 py-3">Custom Field 2 <button class="ml-2 text-xxs sort-btn" data-col="cf2">↑↓</button></th>
+              <th class="px-4 py-3">Custom Field 3 <button class="ml-2 text-xxs sort-btn" data-col="cf3">↑↓</button></th>
+              <th class="px-4 py-3">Custom Field 4 <button class="ml-2 text-xxs sort-btn" data-col="cf4">↑↓</button></th>
+              <th class="px-4 py-3">Custom Field 5 <button class="ml-2 text-xxs sort-btn" data-col="cf5">↑↓</button></th>
+              <th class="px-4 py-3">Custom Field 6 <button class="ml-2 text-xxs sort-btn" data-col="cf6">↑↓</button></th>
+              <th class="px-4 py-3">Custom Field 7 <button class="ml-2 text-xxs sort-btn" data-col="cf7">↑↓</button></th>
+              <th class="px-4 py-3">Custom Field 8 <button class="ml-2 text-xxs sort-btn" data-col="cf8">↑↓</button></th>
+              <th class="px-4 py-3">Custom Field 9 <button class="ml-2 text-xxs sort-btn" data-col="cf9">↑↓</button></th>
+              <th class="px-4 py-3">Custom Field 10 <button class="ml-2 text-xxs sort-btn" data-col="cf10">↑↓</button></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td colspan="26" class="py-8 text-center text-gray-500">No data available in table</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- totals + pagination -->
+      <div class="px-6 py-4 border-t flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-gray-600">
+        <div>Showing 0 to 0 of 0 entries</div>
+        <div class="flex items-center gap-2">
+          <button class="px-4 py-2 border rounded disabled:opacity-50" disabled>Previous</button>
+          <button class="px-4 py-2 border rounded disabled:opacity-50" disabled>Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <div class="text-center text-gray-500 text-xs mt-6">
+      LEKAIHOKA - V6.18 | Copyright © 2025 All rights reserved.
+    </div>
+  </div>
+</div>
+
+
+<script>
+    // Filters collapse toggle
+  const filtersToggle = document.getElementById('filtersToggleBtn');
+  const filtersBody = document.getElementById('filtersBody');
+  const filtersChevron = document.getElementById('filtersChevron');
+  if (filtersToggle) {
+    filtersToggle.addEventListener('click', () => {
+      filtersBody.classList.toggle('hidden');
+      filtersChevron.classList.toggle('rotate-180');
+    });
+  }
+</script>
+
+
+
+
+
+
+
+<!-- ================= ADD SUPPLIER MODAL ================= -->
+
+<!-- ================= ADD SUPPLIER MODAL ================= -->
+{% comment %} <div id="addSupplierModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50">
+  <div class="bg-white w-[920px] max-h-[92vh] overflow-auto rounded shadow-lg">
+    
+    <!-- modal header -->
+    <div class="px-6 py-4 border-b flex items-start justify-between sticky top-0 bg-white z-10">
+      <h3 class="text-lg font-semibold text-gray-800">Add a new contact</h3>
+      <button id="closeAddModalTop" class="text-gray-500 hover:text-gray-800 text-xl">✕</button>
+    </div>
+
+    <!-- modal form -->
+    <form id="supplierForm" class="px-6 py-6 space-y-4">
+
+      <!-- top row -->
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-5">
+          <label class="text-sm font-medium text-gray-700">Contact type:*</label>
+          <select class="w-full border border-gray-300 rounded px-3 py-2 mt-1 text-sm">
+            <option>Suppliers</option>
+            <option>Customers</option>
+          </select>
+        </div>
+
+        <div class="col-span-4 flex items-center gap-4">
+          <label class="flex items-center gap-2">
+            <input type="radio" name="ctype" checked>
+            <span class="text-sm">Individual</span>
+          </label>
+          <label class="flex items-center gap-2">
+            <input type="radio" name="ctype">
+            <span class="text-sm">Business</span>
+          </label>
+        </div>
+
+        <div class="col-span-3">
+          <label class="text-sm font-medium text-gray-700">Contact ID:</label>
+          <input class="w-full border rounded px-3 py-2 text-sm mt-1" placeholder="Contact ID">
+          <p class="text-xs text-gray-400">Leave empty to autogenerate</p>
+        </div>
+      </div>
+
+      <!-- phones + email -->
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-3">
+          <label class="text-sm font-medium">Mobile*</label>
+          <input class="w-full border rounded px-3 py-2 text-sm mt-1">
+        </div>
+        <div class="col-span-3">
+          <label class="text-sm font-medium">Alternate contact number</label>
+          <input class="w-full border rounded px-3 py-2 text-sm mt-1">
+        </div>
+        <div class="col-span-3">
+          <label class="text-sm font-medium">Landline</label>
+          <input class="w-full border rounded px-3 py-2 text-sm mt-1">
+        </div>
+        <div class="col-span-3">
+          <label class="text-sm font-medium">Email</label>
+          <input type="email" class="w-full border rounded px-3 py-2 text-sm mt-1">
+        </div>
+      </div>
+
+      <div>
+        <label class="text-sm font-medium">Assigned To:</label>
+        <input class="w-full border rounded px-3 py-2 text-sm mt-1">
+      </div>
+
+      <hr />
+
+      <!-- MORE INFO BUTTON -->
+      <button id="toggleMoreInfo" type="button" 
+        class="inline-flex items-center gap-2 bg-indigo-600 text-white px-3 py-2 rounded text-sm">
+        More Informations
+        <svg class="w-4 h-4" fill="none" stroke="currentColor">
+          <path stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+
+      <!-- MORE INFO PANEL -->
+      <div id="moreInfoPanel" class="hidden space-y-4 mt-4">
+        
+        <!-- tax, balance, pay term -->
+        <div class="grid grid-cols-12 gap-4">
+          <div class="col-span-4">
+            <label class="text-sm">Tax number:</label>
+            <input class="w-full border rounded px-3 py-2 text-sm mt-1">
+          </div>
+          <div class="col-span-4">
+            <label class="text-sm">Opening Balance:</label>
+            <input type="number" value="0" class="w-full border rounded px-3 py-2 text-sm mt-1">
+          </div>
+          <div class="col-span-4">
+            <label class="text-sm">Pay term:</label>
+            <select class="w-full border rounded px-3 py-2 text-sm mt-1">
+              <option>Please Select</option>
+              <option>Net 7</option>
+              <option>Net 15</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- address row 1 -->
+        <div class="grid grid-cols-12 gap-4">
+          <div class="col-span-6">
+            <label class="text-sm">Address line 1</label>
+            <input class="w-full border rounded px-3 py-2 text-sm mt-1">
+          </div>
+          <div class="col-span-6">
+            <label class="text-sm">Address line 2</label>
+            <input class="w-full border rounded px-3 py-2 text-sm mt-1">
+          </div>
+        </div>
+
+        <!-- address row 2 -->
+        <div class="grid grid-cols-12 gap-4">
+          <div class="col-span-3"><input placeholder="City" class="w-full border rounded px-3 py-2 text-sm"></div>
+          <div class="col-span-3"><input placeholder="State" class="w-full border rounded px-3 py-2 text-sm"></div>
+          <div class="col-span-3"><input placeholder="Country" class="w-full border rounded px-3 py-2 text-sm"></div>
+          <div class="col-span-3"><input placeholder="Zip Code" class="w-full border rounded px-3 py-2 text-sm"></div>
+        </div>
+
+        <!-- other address fields -->
+        <div class="grid grid-cols-12 gap-4">
+          <div class="col-span-4"><input placeholder="Landmark" class="w-full border rounded px-3 py-2 text-sm"></div>
+          <div class="col-span-4"><input placeholder="Street name" class="w-full border rounded px-3 py-2 text-sm"></div>
+          <div class="col-span-4"><input placeholder="Building number" class="w-full border rounded px-3 py-2 text-sm"></div>
+        </div>
+
+        <div>
+          <label class="text-sm">Additional Number</label>
+          <input class="w-full border rounded px-3 py-2 text-sm mt-1">
+        </div>
+   <!-- custom fields 1..10 (two rows of five) -->
+          <div class="grid grid-cols-12 gap-3">
+            <div class="col-span-2">
+              <label class="text-xs text-gray-600">Custom Field 1</label>
+              <div class="relative">
+                <span class="absolute left-2 top-2 text-gray-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M7 3h8l5 5v13H7z"/></svg>
+                </span>
+                <input placeholder="Custom Field 1" class="pl-8 w-full border rounded px-3 py-2 text-sm">
+              </div>
+            </div>
+
+            <div class="col-span-2">
+              <label class="text-xs text-gray-600">Custom Field 2</label>
+              <div class="relative">
+                <span class="absolute left-2 top-2 text-gray-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+                </span>
+                <input placeholder="Custom Field 2" class="pl-8 w-full border rounded px-3 py-2 text-sm">
+              </div>
+            </div>
+
+            <div class="col-span-2">
+              <label class="text-xs text-gray-600">Custom Field 3</label>
+              <div class="relative">
+                <span class="absolute left-2 top-2 text-gray-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M3 7h18v12H3z"/></svg>
+                </span>
+                <input placeholder="Custom Field 3" class="pl-8 w-full border rounded px-3 py-2 text-sm">
+              </div>
+            </div>
+
+            <div class="col-span-2">
+              <label class="text-xs text-gray-600">Custom Field 4</label>
+              <div class="relative">
+                <span class="absolute left-2 top-2 text-gray-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 6v12M6 12h12"/></svg>
+                </span>
+                <input placeholder="Custom Field 4" class="pl-8 w-full border rounded px-3 py-2 text-sm">
+              </div>
+            </div>
+
+            <div class="col-span-2">
+              <label class="text-xs text-gray-600">Custom Field 5</label>
+              <div class="relative">
+                <span class="absolute left-2 top-2 text-gray-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </span>
+                <input placeholder="Custom Field 5" class="pl-8 w-full border rounded px-3 py-2 text-sm">
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-12 gap-3 mt-2">
+            <div class="col-span-2">
+              <label class="text-xs text-gray-600">Custom Field 6</label>
+              <div class="relative">
+                <span class="absolute left-2 top-2 text-gray-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 20h16M6 16v4M10 12v8M14 8v12M18 4v16"/></svg>
+                </span>
+                <input placeholder="Custom Field 6" class="pl-8 w-full border rounded px-3 py-2 text-sm">
+              </div>
+            </div>
+
+            <div class="col-span-2">
+              <label class="text-xs text-gray-600">Custom Field 7</label>
+              <div class="relative">
+                <span class="absolute left-2 top-2 text-gray-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 6v6l4 2"/></svg>
+                </span>
+                <input placeholder="Custom Field 7" class="pl-8 w-full border rounded px-3 py-2 text-sm">
+              </div>
+            </div>
+
+            <div class="col-span-2">
+              <label class="text-xs text-gray-600">Custom Field 8</label>
+              <div class="relative">
+                <span class="absolute left-2 top-2 text-gray-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </span>
+                <input placeholder="Custom Field 8" class="pl-8 w-full border rounded px-3 py-2 text-sm">
+              </div>
+            </div>
+
+            <div class="col-span-2">
+              <label class="text-xs text-gray-600">Custom Field 9</label>
+              <div class="relative">
+                <span class="absolute left-2 top-2 text-gray-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+                </span>
+                <input placeholder="Custom Field 9" class="pl-8 w-full border rounded px-3 py-2 text-sm">
+              </div>
+            </div>
+
+            <div class="col-span-2">
+              <label class="text-xs text-gray-600">Custom Field 10</label>
+              <div class="relative">
+                <span class="absolute left-2 top-2 text-gray-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="14" stroke-width="2"/></svg>
+                </span>
+                <input placeholder="Custom Field 10" class="pl-8 w-full border rounded px-3 py-2 text-sm">
+              </div>
+            </div>
+          </div>
+
+
+      </div>
+
+      <hr />
+
+      <!-- CONTACT PERSONS -->
+      <div>
+        <div class="flex justify-between mb-3">
+          <h4 class="text-md font-medium">Contact Persons</h4>
+          <button id="addContactBtn" type="button" class="px-3 py-2 bg-indigo-600 text-white rounded text-sm">
+            Add Contact Persons
+          </button>
+        </div>
+
+        <!-- CONTACT PERSONS WRAPPER -->
+        <div id="contactPersonsWrap" class="space-y-3">
+
+          <!-- CP1 (open by default) -->
+          <div class="border rounded">
+            <button type="button" class="w-full flex justify-between px-4 py-3 bg-indigo-50"
+              data-toggle-accordion="cp1">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 bg-indigo-600 text-white rounded-full flex justify-center items-center text-xs">1</span>
+                <span class="text-sm font-medium">Add contact person 1</span>
+              </div>
+              <svg class="w-5 h-5 rotate-180 text-gray-500" data-accordion-icon="cp1" fill="none" stroke="currentColor">
+                <path stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+
+            <div id="cp1" class="px-4 py-4">
+              <!-- Name row -->
+              <div class="grid grid-cols-12 gap-3">
+                <div class="col-span-3"><input placeholder="Prefix (Mr/Mrs)" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-5"><input placeholder="First Name *" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Last Name" class="w-full border rounded px-3 py-2 text-sm"></div>
+              </div>
+
+              <!-- Contact row -->
+              <div class="grid grid-cols-12 gap-3 mt-3">
+                <div class="col-span-4"><input placeholder="Email" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Mobile Number" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Alternate contact number" class="w-full border rounded px-3 py-2 text-sm"></div>
+              </div>
+
+              <!-- Job row -->
+              <div class="grid grid-cols-12 gap-3 mt-3">
+                <div class="col-span-4"><input placeholder="Department" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Designation" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Family contact number" class="w-full border rounded px-3 py-2 text-sm"></div>
+              </div>
+
+              <!-- Commission + Allow Login -->
+              <div class="grid grid-cols-12 gap-3 mt-3 items-center">
+                <div class="col-span-6">
+                  <input placeholder="Sales Commission (%)" type="number" class="w-full border rounded px-3 py-2 text-sm">
+                </div>
+
+                <div class="col-span-6 flex items-center gap-3">
+                  <input type="checkbox" id="cp1_allow_login">
+                  <label for="cp1_allow_login" class="text-sm">Allow login</label>
+                </div>
+              </div>
+
+              <!-- LOGIN FIELDS CP1 (Shown in Part 2) -->
+              <div id="cp1_login_fields" class="hidden mt-3 p-3 border rounded bg-gray-50"></div>
+
+            </div>
+          </div>
+
+          <!-- CP2 BLOCK -->
+          <div class="border rounded">
+            <button type="button" class="w-full flex justify-between px-4 py-3"
+              data-toggle-accordion="cp2">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 bg-indigo-600 text-white rounded-full flex justify-center items-center text-xs">2</span>
+                <span class="text-sm font-medium">Add contact person 2</span>
+              </div>
+              <svg class="w-5 h-5 text-gray-500" data-accordion-icon="cp2" fill="none" stroke="currentColor">
+                <path stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+
+            <div id="cp2" class="hidden px-4 py-4">
+              
+              <!-- Name row -->
+              <div class="grid grid-cols-12 gap-3">
+                <div class="col-span-3"><input placeholder="Prefix (Mr/Mrs)" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-5"><input placeholder="First Name" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Last Name" class="w-full border rounded px-3 py-2 text-sm"></div>
+              </div>
+
+              <!-- Contact row -->
+              <div class="grid grid-cols-12 gap-3 mt-3">
+                <div class="col-span-4"><input placeholder="Email" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Mobile Number" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Alternate contact number" class="w-full border rounded px-3 py-2 text-sm"></div>
+              </div>
+
+              <!-- Job row -->
+              <div class="grid grid-cols-12 gap-3 mt-3">
+                <div class="col-span-4"><input placeholder="Department" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Designation" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Family contact number" class="w-full border rounded px-3 py-2 text-sm"></div>
+              </div>
+
+              <!-- Commission + Allow Login -->
+              <div class="grid grid-cols-12 gap-3 mt-3 items-center">
+                <div class="col-span-6">
+                  <input placeholder="Sales Commission (%)" type="number" class="w-full border rounded px-3 py-2 text-sm">
+                </div>
+                <div class="col-span-6 flex items-center gap-3">
+                  <input type="checkbox" id="cp2_allow_login">
+                  <label for="cp2_allow_login" class="text-sm">Allow login</label>
+                </div>
+              </div>
+
+              <!-- LOGIN FIELDS CP2 -->
+              <div id="cp2_login_fields" class="hidden mt-3 p-3 border rounded bg-gray-50"></div>
+
+            </div>
+          </div>
+
+          <!-- CP3 BLOCK -->
+          <div class="border rounded">
+            <button type="button" class="w-full flex justify-between px-4 py-3"
+              data-toggle-accordion="cp3">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 bg-indigo-600 text-white rounded-full flex justify-center items-center text-xs">3</span>
+                <span class="text-sm font-medium">Add contact person 3</span>
+              </div>
+              <svg class="w-5 h-5 text-gray-500" data-accordion-icon="cp3" fill="none" stroke="currentColor">
+                <path stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+
+            <div id="cp3" class="hidden px-4 py-4">
+              
+              <!-- Name row -->
+              <div class="grid grid-cols-12 gap-3">
+                <div class="col-span-3"><input placeholder="Prefix (Mr/Mrs)" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-5"><input placeholder="First Name" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Last Name" class="w-full border rounded px-3 py-2 text-sm"></div>
+              </div>
+
+              <!-- Contact row -->
+              <div class="grid grid-cols-12 gap-3 mt-3">
+                <div class="col-span-4"><input placeholder="Email" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Mobile Number" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Alternate contact number" class="w-full border rounded px-3 py-2 text-sm"></div>
+              </div>
+
+              <!-- Job row -->
+              <div class="grid grid-cols-12 gap-3 mt-3">
+                <div class="col-span-4"><input placeholder="Department" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Designation" class="w-full border rounded px-3 py-2 text-sm"></div>
+                <div class="col-span-4"><input placeholder="Family contact number" class="w-full border rounded px-3 py-2 text-sm"></div>
+              </div>
+
+              <!-- Commission + Allow Login -->
+              <div class="grid grid-cols-12 gap-3 mt-3 items-center">
+                <div class="col-span-6">
+                  <input placeholder="Sales Commission (%)" type="number" class="w-full border rounded px-3 py-2 text-sm">
+                </div>
+                <div class="col-span-6 flex items-center gap-3">
+                  <input type="checkbox" id="cp3_allow_login">
+                  <label for="cp3_allow_login" class="text-sm">Allow login</label>
+                </div>
+              </div>
+
+              <!-- LOGIN FIELDS CP3 -->
+              <div id="cp3_login_fields" class="hidden mt-3 p-3 border rounded bg-gray-50"></div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- footer -->
+      <div class="flex justify-end gap-3 pt-3 pb-6">
+        <button id="closeAddModal" type="button" class="bg-gray-700 text-white px-5 py-2 rounded">Close</button>
+        <button type="submit" class="bg-indigo-600 text-white px-5 py-2 rounded">Save</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+<script>
+/* ------------------------- LOGIN FIELDS TEMPLATE ------------------------- */
+const loginFieldsTemplate = (cpId) => `
+  <div class="grid grid-cols-12 gap-3">
+    <div class="col-span-4">
+      <label class="text-xs text-gray-600">Username</label>
+      <input name="${cpId}_username" placeholder="Username"
+             class="w-full border rounded px-3 py-2 text-sm mt-1">
+    </div>
+
+    <div class="col-span-4">
+      <label class="text-xs text-gray-600">Password</label>
+      <input type="password" name="${cpId}_password" placeholder="Password"
+             class="w-full border rounded px-3 py-2 text-sm mt-1">
+    </div>
+
+    <div class="col-span-4">
+      <label class="text-xs text-gray-600">Confirm Password</label>
+      <input type="password" name="${cpId}_confirm" placeholder="Confirm Password"
+             class="w-full border rounded px-3 py-2 text-sm mt-1">
+    </div>
+  </div>
+
+  <div class="mt-3 flex items-center gap-2">
+    <input type="checkbox" name="${cpId}_active">
+    <label class="text-sm text-gray-700">Is Active</label>
+  </div>
+`;
+
+/* -------------------- ALLOW LOGIN SHOW / HIDE -------------------- */
+function initAllowLoginToggle(cpId) {
+    const checkbox = document.getElementById(`${cpId}_allow_login`);
+    const container = document.getElementById(`${cpId}_login_fields`);
+
+    if (!checkbox || !container) return;
+
+    checkbox.addEventListener("change", () => {
+        if (checkbox.checked) {
+            container.innerHTML = loginFieldsTemplate(cpId);
+            container.classList.remove("hidden");
+        } else {
+            container.innerHTML = "";
+            container.classList.add("hidden");
+        }
+    });
+}
+
+/* -------------------- INIT FOR CP1, CP2, CP3 -------------------- */
+initAllowLoginToggle("cp1");
+initAllowLoginToggle("cp2");
+initAllowLoginToggle("cp3");
+</script>
+
+<!-- ================= SCRIPTS (modal, collapse, accordion, add-person, sorting toggles) ================= -->
+<script>
+  // Modal open/close
+  const openAddBtn = document.getElementById('openAddSupplier');
+  const addModal = document.getElementById('addSupplierModal');
+  const closeAddModal = document.getElementById('closeAddModal');
+  const closeAddModalTop = document.getElementById('closeAddModalTop');
+
+  function showAddModal() {
+    addModal.classList.remove('hidden');
+    addModal.classList.add('flex', 'items-center', 'justify-center');
+    document.body.style.overflow = 'hidden';
+  }
+  function hideAddModal() {
+    addModal.classList.add('hidden');
+    addModal.classList.remove('flex', 'items-center', 'justify-center');
+    document.body.style.overflow = '';
+  }
+
+  if (openAddBtn) openAddBtn.addEventListener('click', showAddModal);
+  if (closeAddModal) closeAddModal.addEventListener('click', hideAddModal);
+  if (closeAddModalTop) closeAddModalTop.addEventListener('click', hideAddModal);
+
+  // click outside modal closes
+  addModal.addEventListener('click', (e) => {
+    if (e.target === addModal) hideAddModal();
+  });
+
+
+
+  // More informations toggle
+  const moreBtn = document.getElementById('toggleMoreInfo');
+  const morePanel = document.getElementById('moreInfoPanel');
+  if (moreBtn) moreBtn.addEventListener('click', () => {
+    morePanel.classList.toggle('hidden');
+  });
+
+  // Accordion toggles for contact persons
+  function attachAccordionListeners() {
+    document.querySelectorAll('[data-toggle-accordion]').forEach(btn => {
+      btn.removeEventListener('click', accordionClickHandler);
+      btn.addEventListener('click', accordionClickHandler);
+    });
+  }
+  function accordionClickHandler() {
+    const key = this.getAttribute('data-toggle-accordion');
+    const panel = document.getElementById(key);
+    const icon = document.querySelector('[data-accordion-icon="'+key+'"]');
+    if (!panel) return;
+    if (panel.classList.contains('hidden')) {
+      panel.classList.remove('hidden');
+      if (icon) icon.classList.add('rotate-180');
+    } else {
+      panel.classList.add('hidden');
+      if (icon) icon.classList.remove('rotate-180');
+    }
+  }
+
+  // Ensure CP1 open, CP2/CP3 closed by default
+  const cp1 = document.getElementById('cp1');
+  if (cp1) cp1.classList.remove('hidden');
+  ['cp2','cp3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+    const icon = document.querySelector('[data-accordion-icon="'+id+'"]');
+    if (icon) icon.classList.remove('rotate-180');
+  });
+  attachAccordionListeners();
+
+  // Add Contact Person dynamic
+  const addContactBtn = document.getElementById('addContactBtn');
+  const contactWrap = document.getElementById('contactPersonsWrap');
+  let cpCount = 3;
+  if (addContactBtn) {
+    addContactBtn.addEventListener('click', () => {
+      cpCount++;
+      const cpId = 'cp' + cpCount;
+      const html = `
+      <div class="border rounded">
+        <button type="button" class="w-full flex items-center justify-between px-4 py-3" data-toggle-accordion="${cpId}">
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs">${cpCount}</span>
+            <span class="font-medium text-sm">Add contact person ${cpCount}</span>
+          </div>
+          <svg class="w-5 h-5 text-gray-500 transform" data-accordion-icon="${cpId}" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div id="${cpId}" class="hidden px-4 py-4">
+          <div class="grid grid-cols-12 gap-3">
+            <div class="col-span-3"><input placeholder="Prefix (Mr/Mrs)" class="w-full border rounded px-3 py-2 text-sm"></div>
+            <div class="col-span-5"><input placeholder="First Name" class="w-full border rounded px-3 py-2 text-sm"></div>
+            <div class="col-span-4"><input placeholder="Last Name" class="w-full border rounded px-3 py-2 text-sm"></div>
+          </div>
+
+          <div class="grid grid-cols-12 gap-3 mt-3">
+            <div class="col-span-4"><input placeholder="Email" class="w-full border rounded px-3 py-2 text-sm"></div>
+            <div class="col-span-4"><input placeholder="Mobile Number" class="w-full border rounded px-3 py-2 text-sm"></div>
+            <div class="col-span-4"><input placeholder="Alternate contact number" class="w-full border rounded px-3 py-2 text-sm"></div>
+          </div>
+
+          <div class="grid grid-cols-12 gap-3 mt-3">
+            <div class="col-span-4"><input placeholder="Department" class="w-full border rounded px-3 py-2 text-sm"></div>
+            <div class="col-span-4"><input placeholder="Designation" class="w-full border rounded px-3 py-2 text-sm"></div>
+            <div class="col-span-4"><input placeholder="Family contact number" class="w-full border rounded px-3 py-2 text-sm"></div>
+          </div>
+
+          <div class="grid grid-cols-12 gap-3 mt-3 items-center">
+            <div class="col-span-6"><input placeholder="Sales Commission Percentage (%)" type="number" class="w-full border rounded px-3 py-2 text-sm"></div>
+            <div class="col-span-6 flex items-center gap-3">
+              <input type="checkbox" id="${cpId}_allow_login">
+              <label for="${cpId}_allow_login" class="text-sm text-gray-700">Allow login</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      `;
+      contactWrap.insertAdjacentHTML('beforeend', html);
+      attachAccordionListeners(); // reattach listeners so new toggle works
+    });
+  }
+
+  // Sorting visual toggles for headers (Custom fields & others)
+  document.querySelectorAll('.sort-btn, .sort-indicator').forEach(el => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', (e) => {
+      const col = el.getAttribute('data-col');
+      const current = el.getAttribute('data-sort') || 'none';
+      const next = current === 'asc' ? 'desc' : (current === 'desc' ? 'none' : 'asc');
+      document.querySelectorAll('.sort-btn, .sort-indicator').forEach(x => x.setAttribute('data-sort', 'none'));
+      el.setAttribute('data-sort', next);
+      document.querySelectorAll('.sort-btn, .sort-indicator').forEach(x => {
+        x.innerText = x.getAttribute('data-sort') === 'asc' ? '↑' : (x.getAttribute('data-sort') === 'desc' ? '↓' : '↑↓');
+      });
+      // TODO: use col & next to request sorted data from backend (AJAX)
+    });
+  });
+
+  // Form submission - demo (prevent reload)
+  const supplierForm = document.getElementById('supplierForm');
+  if (supplierForm) {
+    supplierForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // TODO: implement AJAX POST to your Django endpoint to save supplier + contact persons
+      alert('Saved (demo). Implement backend endpoint to persist data.');
+      supplierForm.reset();
+
+      // Reset CP panels: CP1 open, others closed
+      const cp1El = document.getElementById('cp1'); if (cp1El) cp1El.classList.remove('hidden');
+      ['cp2','cp3'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
+      hideAddModal();
+    });
+  }
+</script> {% endcomment %}
+
+{% endblock %}

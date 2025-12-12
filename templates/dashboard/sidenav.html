@@ -53,6 +53,8 @@
                     <!-- <li><a href="{% url 'add_user' %}" class="block px-4 py-2">Add User</a></li> -->
                     <li><a href="{% url 'user_list' %}" class="block px-4 py-2">User List</a></li>
                     <li><a href="{% url 'roles' %}" class="block px-4 py-2">Roles & Permissions</a></li>
+
+                    <li><a href="{% url 'sales_commistion' %}" class="block px-4 py-2">Sales Commistion</a></li>
                 </ul>
                     </li>
 
@@ -66,7 +68,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                 </svg>
-                                <span class="nav-label">Products</span>
+                                <span class="nav-label">Contacts</span>
                             </div>
                             <svg class="w-4 h-4 arrow transition-transform flex-shrink-0" fill="none"
                                 stroke="currentColor" viewBox="0 0 24 24">
@@ -75,10 +77,18 @@
                             </svg>
                         </button>
                         <ul id="productSub" class="submenu ml-12 mt-2 space-y-1 hidden">
-                            <li><a href="#" class="block px-4 py-2.5 text-sm rounded-lg hover:bg-white/10"
+
+                            <li><a href="{% url 'suppliers' %}" class="block px-4 py-2">Suppliers</a></li>
+                            {% comment %} <li><a href="{% url 'contacts' %}" class="block px-4 py-2">Customers</a></li> {% endcomment %}
+                            {% comment %} <li><a href="{% url 'contacts' %}" class="block px-4 py-2">Customer Groups</a></li> {% endcomment %}
+                            {% comment %} <li><a href="{% url 'contacts' %}" class="block px-4 py-2">Import Contacts</a></li> {% endcomment %}
+
+
+                            {% comment %} <li><a href="#" class="block px-4 py-2.5 text-sm rounded-lg hover:bg-white/10"
                                     onclick="showSection('add-product', this)">Add Product</a></li>
+                                    
                             <li><a href="#" class="block px-4 py-2.5 text-sm rounded-lg hover:bg-white/10"
-                                    onclick="showSection('product-list', this)">Product List</a></li>
+                                    onclick="showSection('product-list', this)">Product List</a></li> {% endcomment %}
                         </ul>
                     </li>
 

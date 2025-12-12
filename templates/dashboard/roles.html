@@ -7,7 +7,7 @@
     .sort-icon:hover { opacity: 0.7; }
   </style>
 
-  <div class="container mx-auto px-4 py-8">
+  <div class="container mx-auto md:px-2 md:py-2 md:px-2 md:py-4">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
       <div>
@@ -36,13 +36,27 @@
           <input type="text" id="searchInput" placeholder="Search ..." 
                  class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full lg:w-64" />
 
-          <button onclick="openModal()" 
+          {% comment %} <button onclick="openModal()" 
                   class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-full flex items-center gap-2 transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
             </svg>
             Add
-          </button>
+          </button>roles_add {% endcomment %}
+
+          <a href="{% url 'roles_add' %}" 
+   class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-full 
+          flex items-center gap-2 transition">
+
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" 
+            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" 
+            clip-rule="evenodd" />
+    </svg>
+
+    Add
+</a>
+
         </div>
       </div>
     </div>
@@ -132,7 +146,7 @@
   </div>
 
   <!-- Add/Edit Modal -->
-  <div id="roleModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+  {% comment %} <div id="roleModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
       <div class="flex justify-between items-center p-6 border-b">
         <h3 id="modalTitle" class="text-lg font-semibold">Add New Role</h3>
@@ -149,14 +163,14 @@
         <button onclick="saveRole()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save</button>
       </div>
     </div>
-  </div>
+  </div> {% endcomment %}
 
   <!-- Fixed Footer -->
   <div class="fixed bottom-0 left-0 right-0 bg-gray-100 border-t border-gray-300 text-center py-3 text-sm text-gray-600">
     LEKAJHOKA - V6.10 | Copyright © 2025 All rights reserved.
   </div>
 
-  <script>
+  {% comment %} <script>
     let editingRole = null;
 
     function openModal() {
@@ -224,7 +238,7 @@
       rows.forEach(row => tbody.appendChild(row));
       ascending = !ascending;
     });
-  </script>
+  </script> {% endcomment %}
 
 
 {% endblock %}

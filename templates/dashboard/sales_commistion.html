@@ -1,0 +1,188 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Sales Commission Agents{% endblock %}
+
+{% block content %}
+
+<!-- PAGE WRAPPER -->
+<div class="container mx-auto px-2 py-2">
+
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-3xl font-semibold text-gray-800">Sales Commission Agents</h1>
+    </div>
+
+    <!-- MAIN CARD -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+
+        <!-- Title & Add button -->
+        <div class="px-6 py-4 border-b flex justify-between items-center">
+            <h2 class="text-lg font-medium text-gray-700">All Sales Commission Agents</h2>
+
+            <!-- ADD BUTTON (Opens Modal) -->
+            <button onclick="openModal()"
+                class="bg-blue-600 text-white font-medium py-2 px-6 rounded-full flex items-center gap-2 hover:bg-blue-700 transition">
+                <span class="text-xl font-bold">+</span> Add
+            </button>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="px-6 py-4 flex flex-wrap gap-4 items-center text-sm">
+            <!-- Show Entries -->
+            <div class="flex items-center gap-2">
+                <span>Show</span>
+                <select class="border rounded px-2 py-1">
+                    <option>25</option>
+                    <option>50</option>
+                    <option>100</option>
+                </select>
+                <span>entries</span>
+            </div>
+
+            <!-- Export Buttons -->
+            <div class="flex flex-wrap gap-2">
+                <button class="px-3 py-1 border rounded text-xs hover:bg-gray-100">Export CSV</button>
+                <button class="px-3 py-1 border rounded text-xs hover:bg-gray-100">Export Excel</button>
+                <button class="px-3 py-1 border rounded text-xs hover:bg-gray-100">Print</button>
+                <button class="px-3 py-1 border rounded text-xs hover:bg-gray-100">Column visibility</button>
+                <button class="px-3 py-1 border rounded text-xs hover:bg-gray-100">Export PDF</button>
+            </div>
+
+            <!-- Search -->
+            <div class="ml-auto">
+                <input type="text" placeholder="Search..."
+                       class="border rounded px-4 py-2 w-64">
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left">
+                <thead class="bg-gray-50 border-b">
+                    <tr>
+                        <th class="px-6 py-3">Name</th>
+                        <th class="px-6 py-3">Email</th>
+                        <th class="px-6 py-3">Contact Number</th>
+                        <th class="px-6 py-3">Address</th>
+                        <th class="px-6 py-3">Sales Commission Percentage (%)</th>
+                        <th class="px-6 py-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="text-center py-6 text-gray-500">No data available in table</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 flex justify-between text-sm text-gray-600 border-t">
+            <div>Showing 0 to 0 of 0 entries</div>
+            <div class="flex gap-2">
+                <button class="px-4 py-2 border rounded" disabled>Previous</button>
+                <button class="px-4 py-2 border rounded" disabled>Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="text-center text-gray-500 text-xs mt-8">
+        LEKAIHOKA - V6.18 | Copyright © 2025 All rights reserved.
+    </div>
+</div>
+
+<!-- ========================= MODAL ========================= -->
+<div id="addModal"
+     class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 backdrop-blur-sm">
+
+    <div class="bg-white w-full max-w-3xl rounded shadow-lg p-6 relative">
+
+        <!-- Close Button -->
+        <button onclick="closeModal()" class="absolute right-4 top-4 text-gray-500 text-xl">✕</button>
+
+        <h2 class="text-2xl font-semibold mb-6">Add sales commission agent</h2>
+
+        <!-- FORM -->
+        <form>
+
+            <!-- Row 1 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                    <label class="font-medium">Prefix:</label>
+                    <input type="text" placeholder="Mr / Ms"
+                           class="border rounded w-full px-3 py-2 mt-1">
+                </div>
+
+                <div>
+                    <label class="font-medium">First Name:*</label>
+                    <input type="text" placeholder="First Name"
+                           class="border rounded w-full px-3 py-2 mt-1">
+                </div>
+
+                <div>
+                    <label class="font-medium">Last Name:</label>
+                    <input type="text" placeholder="Last Name"
+                           class="border rounded w-full px-3 py-2 mt-1">
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="font-medium">Email:</label>
+                    <input type="email" placeholder="Email"
+                           class="border rounded w-full px-3 py-2 mt-1">
+                </div>
+
+                <div>
+                    <label class="font-medium">Contact Number:</label>
+                    <input type="text" placeholder="Contact Number"
+                           class="border rounded w-full px-3 py-2 mt-1">
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="mb-4">
+                <label class="font-medium">Address:</label>
+                <textarea placeholder="Address"
+                          class="border rounded w-full px-3 py-2 mt-1 h-20"></textarea>
+            </div>
+
+            <!-- Commission Percentage -->
+            <div class="mb-6">
+                <label class="font-medium">Sales Commission Percentage (%):</label>
+                <input type="number" placeholder="Sales Commission Percentage (%)"
+                       class="border rounded w-full px-3 py-2 mt-1">
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-end gap-3 mt-4">
+                <button type="button" onclick="closeModal()"
+                        class="px-6 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">
+                    Close
+                </button>
+
+                <button type="submit"
+                        class="px-6 py-2 bg-blue-700 text-white rounded hover:bg-blue-800">
+                    Save
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- MODAL JS -->
+<script>
+    function openModal() {
+        document.getElementById("addModal").classList.remove("hidden");
+        document.getElementById("addModal").classList.add("flex");
+    }
+
+    function closeModal() {
+        document.getElementById("addModal").classList.add("hidden");
+    }
+</script>
+
+{% endblock %}
